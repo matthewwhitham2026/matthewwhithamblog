@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collected Visuals — Matthew Whitham</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Collected Visuals Specific Styles */
+        .visuals-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: calc(var(--space-xl) + var(--space-lg)) var(--space-md) var(--space-xl);
+            position: relative;
+            z-index: 1;
+        }
+
+        .visuals-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .visuals-title {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .visuals-subtitle {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Masonry Grid */
+        .masonry-grid {
+            columns: 3;
+            column-gap: var(--space-md);
+        }
+
+        @media (max-width: 1000px) {
+            .masonry-grid {
+                columns: 2;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .masonry-grid {
+                columns: 1;
+            }
+            .visuals-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        .visual-item {
+            break-inside: avoid;
+            margin-bottom: var(--space-md);
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .visual-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.6s ease, filter 0.6s ease;
+            filter: grayscale(20%) brightness(0.95);
+        }
+
+        .visual-item:hover img {
+            transform: scale(1.03);
+            filter: grayscale(0%) brightness(1);
+        }
+
+        .visual-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                transparent 60%,
+                rgba(10, 11, 13, 0.8) 100%
+            );
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .visual-item:hover::before {
+            opacity: 1;
+        }
+
+        .visual-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-md);
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-style: italic;
+            color: var(--text-primary);
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+            z-index: 2;
+        }
+
+        .visual-item:hover .visual-caption {
+            transform: translateY(0);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 11, 13, 0.97);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+            cursor: zoom-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--bg-elevated);
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            border-color: var(--forest-green);
+        }
+
+        .lightbox-caption {
+            position: absolute;
+            bottom: var(--space-lg);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 600px;
+        }
+
+        /* Empty State */
+        .empty-visuals {
+            text-align: center;
+            padding: var(--space-xl) 0;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Loading Animation */
+        .visual-item {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient background effects -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="grain-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <a href="index.html" class="nav-logo">MW</a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Today</a>
+            <a href="archive.html" class="nav-link">Archive</a>
+            <a href="visuals.html" class="nav-link active">Visuals</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="support.html" class="nav-link">Support</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="visuals-container">
+        <header class="visuals-header">
+            <h1 class="visuals-title">Collected Visuals</h1>
+            <p class="visuals-subtitle">Fragments of inspiration gathered from the corners of the internet — things that caught my eye and held it</p>
+        </header>
+
+        <div class="masonry-grid" id="visuals-grid">
+            <!-- Visuals will be loaded here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img src="" alt="" id="lightbox-img">
+        <p class="lightbox-caption" id="lightbox-caption"></p>
+    </div>
+
+    <script>
+        // Load visuals from JSON
+        async function loadVisuals() {
+            try {
+                const response = await fetch('visuals.json');
+                const data = await response.json();
+                renderVisuals(data.visuals || []);
+            } catch (error) {
+                console.error('Error loading visuals:', error);
+                document.getElementById('visuals-grid').innerHTML = 
+                    '<p class="empty-visuals">No visuals collected yet. Check back soon.</p>';
+            }
+        }
+
+        function renderVisuals(visuals) {
+            const grid = document.getElementById('visuals-grid');
+            
+            if (!visuals || visuals.length === 0) {
+                grid.innerHTML = '<p class="empty-visuals">No visuals collected yet. Check back soon.</p>';
+                return;
+            }
+
+            grid.innerHTML = visuals.map((visual, index) => `
+                <div class="visual-item" style="animation-delay: ${index * 0.1}s" onclick="openLightbox('${visual.image}', '${escapeHtml(visual.caption || '')}')">
+                    <img src="images/visuals/${visual.image}" alt="${escapeHtml(visual.caption || 'Collected visual')}">
+                    ${visual.caption ? `<p class="visual-caption">${escapeHtml(visual.caption)}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Lightbox functions
+        function openLightbox(image, caption) {
+            document.getElementById('lightbox-img').src = 'images/visuals/' + image;
+            document.getElementById('lightbox-caption').textContent = caption;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close lightbox on escape or click outside
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('lightbox')) {
+                closeLightbox();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadVisuals);
+    </script>
+</body>
+</html>
