@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Matthew Whitham</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0b0d;
+            --bg-card: #111318;
+            --bg-elevated: #181b22;
+            --forest-green: #2d5a4a;
+            --forest-light: #3d7a64;
+            --witchy-purple: #5c4a6e;
+            --witchy-light: #7d6891;
+            --text-primary: #e8e4df;
+            --text-secondary: #9a9590;
+            --text-muted: #5a5550;
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Quicksand', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-weight: 300;
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--bg-elevated);
+        }
+
+        .admin-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        .view-site-link {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--bg-elevated);
+            transition: all 0.3s ease;
+        }
+
+        .view-site-link:hover {
+            border-color: var(--forest-green);
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--text-primary);
+            background: var(--bg-card);
+            border: 1px solid var(--bg-elevated);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--forest-green);
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 350px;
+            padding: 1rem;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--text-primary);
+            background: var(--bg-card);
+            border: 1px solid var(--bg-elevated);
+            resize: vertical;
+            line-height: 1.8;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--forest-green);
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--bg-elevated);
+            border-bottom: none;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-color: var(--forest-green);
+        }
+
+        .toolbar-divider {
+            width: 1px;
+            background: var(--bg-card);
+            margin: 0 0.5rem;
+        }
+
+        .toolbar-help {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .date-input-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .date-input-group input {
+            width: auto;
+        }
+
+        .today-btn {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--bg-elevated);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .today-btn:hover {
+            border-color: var(--forest-green);
+            color: var(--text-primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--forest-green) 0%, var(--forest-light) 100%);
+            color: var(--text-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(45, 90, 74, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--bg-elevated);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--witchy-purple);
+            color: var(--text-primary);
+        }
+
+        /* Output Section */
+        .output-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--bg-elevated);
+            display: none;
+        }
+
+        .output-section.active {
+            display: block;
+        }
+
+        .output-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: var(--forest-light);
+        }
+
+        .output-instructions {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .output-instructions ol {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .output-instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .output-instructions a {
+            color: var(--forest-light);
+        }
+
+        .output-code {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-elevated);
+            padding: 1rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: var(--bg-elevated);
+            border: 1px solid var(--bg-elevated);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--forest-green);
+            color: var(--text-primary);
+        }
+
+        .copy-btn.copied {
+            background: var(--forest-green);
+            color: white;
+        }
+
+        /* Preview Modal */
+        .preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .preview-modal.active {
+            display: block;
+        }
+
+        .preview-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-deep);
+            border: 1px solid var(--bg-elevated);
+            position: relative;
+        }
+
+        .preview-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--bg-elevated);
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .preview-close:hover {
+            border-color: var(--forest-green);
+        }
+
+        .preview-content {
+            padding: 3rem 2rem;
+        }
+
+        /* Preview Styles (matching main site) */
+        .preview-content .post-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .preview-content .date-display {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+        }
+
+        .preview-content .date-day {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 300;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--forest-light) 0%, var(--witchy-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .preview-content .date-meta {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-content .date-month {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+        }
+
+        .preview-content .date-year {
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+        }
+
+        .preview-content .post-title {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.2;
+            margin-top: 0.5rem;
+        }
+
+        .preview-content .post-body p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .preview-content .post-body .drop-cap::first-letter {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 400;
+            float: left;
+            line-height: 0.8;
+            margin-right: 0.75rem;
+            margin-top: 0.1rem;
+            background: linear-gradient(135deg, var(--forest-light) 0%, var(--witchy-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .preview-content .post-body .pull-quote {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-style: italic;
+            text-align: center;
+            color: var(--witchy-light);
+            padding: 2rem 1rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .preview-content .post-body .pull-quote::before,
+        .preview-content .post-body .pull-quote::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--witchy-purple), transparent);
+        }
+
+        .preview-content .post-body .pull-quote::before { top: 0; }
+        .preview-content .post-body .pull-quote::after { bottom: 0; }
+
+        /* Formatting help */
+        .formatting-help {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-elevated);
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .formatting-help.active {
+            display: block;
+        }
+
+        .formatting-help h4 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-style: italic;
+            margin-bottom: 0.75rem;
+            color: var(--witchy-light);
+        }
+
+        .formatting-help table {
+            width: 100%;
+            font-size: 0.85rem;
+        }
+
+        .formatting-help td {
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--bg-elevated);
+        }
+
+        .formatting-help td:first-child {
+            color: var(--text-muted);
+            width: 40%;
+        }
+
+        .formatting-help code {
+            background: var(--bg-deep);
+            padding: 0.15rem 0.4rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1 class="admin-title">Write New Post</h1>
+            <a href="../index.html" class="view-site-link">View Site</a>
+        </header>
+
+        <div class="form-group">
+            <label class="form-label">Date</label>
+            <div class="date-input-group">
+                <input type="date" id="post-date" class="form-input">
+                <button type="button" class="today-btn" onclick="setToday()">Today</button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Title</label>
+            <input type="text" id="post-title" class="form-input" placeholder="Your post title...">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Content</label>
+            <div class="toolbar">
+                <button type="button" class="toolbar-btn" onclick="insertFormat('**', '**')" title="Bold">
+                    <strong>B</strong>
+                </button>
+                <button type="button" class="toolbar-btn" onclick="insertFormat('*', '*')" title="Italic">
+                    <em>I</em>
+                </button>
+                <button type="button" class="toolbar-btn" onclick="insertQuote()" title="Pull Quote">
+                    "
+                </button>
+                <div class="toolbar-divider"></div>
+                <button type="button" class="toolbar-btn" onclick="toggleHelp()" title="Formatting Help">
+                    ?
+                </button>
+            </div>
+            <textarea id="post-content" class="form-textarea" placeholder="Start writing...
+
+Just write naturally. Use blank lines between paragraphs.
+
+The first paragraph automatically gets a drop cap."></textarea>
+            
+            <div class="formatting-help" id="formatting-help">
+                <h4>Formatting Guide</h4>
+                <table>
+                    <tr>
+                        <td>New paragraph</td>
+                        <td>Leave a blank line</td>
+                    </tr>
+                    <tr>
+                        <td>Bold</td>
+                        <td><code>**your text**</code></td>
+                    </tr>
+                    <tr>
+                        <td>Italic</td>
+                        <td><code>*your text*</code></td>
+                    </tr>
+                    <tr>
+                        <td>Pull quote</td>
+                        <td><code>> Your quote here</code></td>
+                    </tr>
+                    <tr>
+                        <td>Image</td>
+                        <td><code>[img:images/photo.jpg:right:Caption]</code></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary" onclick="generatePost()">Generate Post</button>
+            <button type="button" class="btn btn-secondary" onclick="showPreview()">Preview</button>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section" id="output-section">
+            <h2 class="output-title">Your Post is Ready!</h2>
+            
+            <div class="output-instructions">
+                <strong>To publish this post:</strong>
+                <ol>
+                    <li>Go to your <a href="https://github.com/matthewwhitham2026/matthewwhithamblog" target="_blank">GitHub repo</a></li>
+                    <li>Click on <code>posts.json</code></li>
+                    <li>Click the pencil icon to edit</li>
+                    <li>Find the line that says <code>"posts": [</code></li>
+                    <li>Right after that <code>[</code>, paste the code below</li>
+                    <li>Add a comma after the <code>}</code> if there are more posts below it</li>
+                    <li>Click "Commit changes"</li>
+                </ol>
+            </div>
+
+            <div class="output-code" id="output-code"></div>
+            <button type="button" class="copy-btn" onclick="copyCode()">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="preview-modal" id="preview-modal">
+        <div class="preview-container">
+            <button class="preview-close" onclick="closePreview()">&times;</button>
+            <div class="preview-content" id="preview-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setToday();
+        });
+
+        function setToday() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('post-date').value = `${yyyy}-${mm}-${dd}`;
+        }
+
+        function insertFormat(before, after) {
+            const textarea = document.getElementById('post-content');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const selected = text.substring(start, end) || 'text';
+            
+            textarea.value = text.substring(0, start) + before + selected + after + text.substring(end);
+            
+            // Set cursor position
+            const newPos = start + before.length + selected.length + after.length;
+            textarea.setSelectionRange(newPos, newPos);
+            textarea.focus();
+        }
+
+        function insertQuote() {
+            const textarea = document.getElementById('post-content');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const selected = text.substring(start, end) || 'Your quote here';
+            
+            const insertion = `\n\n> ${selected}\n\n`;
+            textarea.value = text.substring(0, start) + insertion + text.substring(end);
+            
+            textarea.focus();
+        }
+
+        function toggleHelp() {
+            document.getElementById('formatting-help').classList.toggle('active');
+        }
+
+        function generatePost() {
+            const date = document.getElementById('post-date').value;
+            const title = document.getElementById('post-title').value.trim();
+            const content = document.getElementById('post-content').value.trim();
+
+            if (!date || !title || !content) {
+                alert('Please fill in the date, title, and content.');
+                return;
+            }
+
+            // Escape content for JSON
+            const escapedContent = content
+                .replace(/\\/g, '\\\\')
+                .replace(/"/g, '\\"')
+                .replace(/\n/g, '\\n')
+                .replace(/\r/g, '\\r')
+                .replace(/\t/g, '\\t');
+
+            const jsonEntry = `    {
+      "id": "${date}",
+      "date": "${date}",
+      "title": "${title.replace(/"/g, '\\"')}",
+      "content": "${escapedContent}"
+    },`;
+
+            document.getElementById('output-code').textContent = jsonEntry;
+            document.getElementById('output-section').classList.add('active');
+            
+            // Scroll to output
+            document.getElementById('output-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyCode() {
+            const code = document.getElementById('output-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy to Clipboard';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function showPreview() {
+            const date = document.getElementById('post-date').value;
+            const title = document.getElementById('post-title').value.trim() || 'Untitled';
+            const content = document.getElementById('post-content').value.trim() || 'No content yet...';
+
+            const dateObj = new Date(date + 'T12:00:00');
+            const day = dateObj.getDate();
+            const month = dateObj.toLocaleDateString('en-US', { month: 'long' });
+            const year = dateObj.getFullYear();
+
+            // Format content
+            let formattedContent = content;
+            
+            // Bold
+            formattedContent = formattedContent.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            
+            // Italic
+            formattedContent = formattedContent.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            
+            // Pull quotes
+            formattedContent = formattedContent.replace(/^> (.+)$/gm, '</p><p class="pull-quote">"$1"</p><p>');
+
+            // Paragraphs
+            const paragraphs = formattedContent.split('\n\n').filter(p => p.trim());
+            formattedContent = paragraphs.map((p, i) => {
+                if (p.includes('<p class="pull-quote">')) return p;
+                if (i === 0) return `<p class="drop-cap">${p.replace(/\n/g, ' ')}</p>`;
+                return `<p>${p.replace(/\n/g, ' ')}</p>`;
+            }).join('\n');
+
+            // Clean up
+            formattedContent = formattedContent.replace(/<p><\/p>/g, '');
+
+            document.getElementById('preview-content').innerHTML = `
+                <header class="post-header">
+                    <div class="date-display">
+                        <span class="date-day">${day}</span>
+                        <div class="date-meta">
+                            <span class="date-month">${month}</span>
+                            <span class="date-year">${year}</span>
+                        </div>
+                    </div>
+                    <h1 class="post-title">${escapeHtml(title)}</h1>
+                </header>
+                <div class="post-body">
+                    ${formattedContent}
+                </div>
+            `;
+
+            document.getElementById('preview-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePreview() {
+            document.getElementById('preview-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Close preview on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePreview();
+        });
+    </script>
+</body>
+</html>
