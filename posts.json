@@ -1,5 +1,12 @@
 {
-  "posts": [
+  "posts": 
+   {
+      "id": "2026-01-19",
+      "date": "2026-01-19",
+      "title": "A test post",
+      "content": "This is a test post to see if everything works. This is my new blog. Blog is a weird name but its ok."
+    },
+  
     {
       "id": "2026-01-19",
       "date": "2026-01-19",
