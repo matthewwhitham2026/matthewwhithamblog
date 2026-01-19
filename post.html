@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matthew Whitham</title>
+    <title>Post — Matthew Whitham</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
     <nav class="main-nav">
         <a href="index.html" class="nav-logo">MW</a>
         <div class="nav-links">
-            <a href="index.html" class="nav-link active">Today</a>
+            <a href="index.html" class="nav-link">Today</a>
             <a href="archive.html" class="nav-link">Archive</a>
             <a href="about.html" class="nav-link">About</a>
             <a href="support.html" class="nav-link">Support</a>
@@ -40,8 +40,12 @@
         </header>
 
         <article class="post-content" id="post-content">
-            <p>Loading today's post...</p>
+            <p>Loading post...</p>
         </article>
+
+        <nav class="single-post-nav" id="post-nav">
+            <!-- Navigation will be populated by JavaScript -->
+        </nav>
 
         <footer class="post-footer">
             <div class="footer-line"></div>
@@ -50,5 +54,6 @@
     </main>
 
     <script src="js/main.js"></script>
+    <script src="js/post.js"></script>
 </body>
 </html>

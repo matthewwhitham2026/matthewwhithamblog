@@ -1,30 +1,31 @@
 /* ===================================
    Archive Page JavaScript
+   Loads posts from posts.json
    =================================== */
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadArchive();
+document.addEventListener('DOMContentLoaded', async () => {
+    const posts = await window.BlogUtils.fetchPosts();
+    loadArchive(posts);
 });
 
-function loadArchive() {
-    const posts = window.BlogUtils.getPosts();
+function loadArchive(posts) {
     const archiveContent = document.getElementById('archive-content');
     
     if (!archiveContent) return;
     
-    // Get all post dates and sort them
-    const postDates = Object.keys(posts).sort().reverse();
-    
-    if (postDates.length === 0) {
-        // Keep the placeholder content
+    if (!posts || posts.length === 0) {
+        archiveContent.innerHTML = '<p class="empty-archive">No posts yet. Check back soon!</p>';
         return;
     }
+    
+    // Sort posts by date (newest first)
+    const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
     
     // Group posts by month
     const monthGroups = {};
     
-    postDates.forEach(dateKey => {
-        const date = new Date(dateKey);
+    sortedPosts.forEach(post => {
+        const date = new Date(post.date + 'T12:00:00');
         const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
         const monthName = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
         
@@ -36,9 +37,8 @@ function loadArchive() {
         }
         
         monthGroups[monthKey].posts.push({
-            date: date,
-            dateKey: dateKey,
-            ...posts[dateKey]
+            ...post,
+            dateObj: date
         });
     });
     
@@ -55,8 +55,8 @@ function loadArchive() {
             <h2 class="month-header">${group.name}</h2>
             <div class="archive-posts">
                 ${group.posts.map(post => `
-                    <a href="posts/${post.dateKey}.html" class="archive-card" data-date="${post.dateKey}">
-                        <span class="card-date">${post.date.getDate()}</span>
+                    <a href="post.html?id=${post.id}" class="archive-card">
+                        <span class="card-date">${post.dateObj.getDate()}</span>
                         <h3 class="card-title">${escapeHtml(post.title)}</h3>
                         <p class="card-preview">${getPreview(post.content)}</p>
                     </a>
@@ -67,17 +67,20 @@ function loadArchive() {
         archiveContent.appendChild(section);
     });
     
-    // Re-initialize scroll animations for new cards
+    // Initialize scroll animations
     initArchiveAnimations();
 }
 
-function getPreview(content, maxLength = 150) {
-    // Strip markdown and get plain text
+function getPreview(content, maxLength = 120) {
+    if (!content) return '';
+    
+    // Strip formatting and get plain text
     let text = content
         .replace(/\*\*(.+?)\*\*/g, '$1')
         .replace(/\*(.+?)\*/g, '$1')
         .replace(/^> /gm, '')
-        .replace(/\[img:\d+:\w+\]/g, '')
+        .replace(/\[img:[^\]]+\]/g, '')
+        .replace(/\n/g, ' ')
         .trim();
     
     if (text.length > maxLength) {
@@ -113,4 +116,20 @@ function initArchiveAnimations() {
         card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
         observer.observe(card);
     });
+    
+    // Add visible class styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .archive-card.visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+        .empty-archive {
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: var(--space-xl) 0;
+        }
+    `;
+    document.head.appendChild(style);
 }

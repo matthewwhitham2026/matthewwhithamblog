@@ -1,107 +1,24 @@
 /* ===================================
    Matthew Whitham Blog - Main JS
+   JSON-based post system
    =================================== */
 
-// Constants
-const STORAGE_KEY = 'mw_blog_posts';
-const SCHEDULED_KEY = 'mw_blog_scheduled';
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
-    initializeSite();
-});
-
-function initializeSite() {
-    // Check for scheduled posts that need to be published
-    checkScheduledPosts();
-    
-    // Load today's post on homepage
-    if (document.querySelector('.home-container')) {
-        loadTodaysPost();
+// Fetch posts from JSON file
+async function fetchPosts() {
+    try {
+        const response = await fetch('posts.json');
+        const data = await response.json();
+        return data.posts || [];
+    } catch (error) {
+        console.error('Error loading posts:', error);
+        return [];
     }
-    
-    // Add smooth animations on scroll
-    initScrollAnimations();
 }
 
-// ===================================
-// Post Management
-// ===================================
-
-function getPosts() {
-    const posts = localStorage.getItem(STORAGE_KEY);
-    return posts ? JSON.parse(posts) : {};
-}
-
-function savePosts(posts) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-}
-
-function getScheduledPosts() {
-    const scheduled = localStorage.getItem(SCHEDULED_KEY);
-    return scheduled ? JSON.parse(scheduled) : [];
-}
-
-function saveScheduledPosts(scheduled) {
-    localStorage.setItem(SCHEDULED_KEY, JSON.stringify(scheduled));
-}
-
-function checkScheduledPosts() {
-    const scheduled = getScheduledPosts();
-    const now = new Date();
-    const posts = getPosts();
+// Format post content (markdown-like to HTML)
+function formatContent(content) {
+    if (!content) return '';
     
-    const remaining = [];
-    
-    scheduled.forEach(post => {
-        const publishDate = new Date(post.scheduledFor);
-        if (publishDate <= now) {
-            // Publish this post
-            const dateKey = formatDateKey(publishDate);
-            posts[dateKey] = {
-                title: post.title,
-                content: post.content,
-                images: post.images || [],
-                publishedAt: publishDate.toISOString()
-            };
-        } else {
-            remaining.push(post);
-        }
-    });
-    
-    savePosts(posts);
-    saveScheduledPosts(remaining);
-}
-
-function loadTodaysPost() {
-    const posts = getPosts();
-    const today = formatDateKey(new Date());
-    const yesterday = formatDateKey(new Date(Date.now() - 86400000));
-    
-    let post = posts[today] || posts[yesterday];
-    let displayDate = posts[today] ? new Date() : new Date(Date.now() - 86400000);
-    
-    if (!post) {
-        // Show placeholder content (already in HTML)
-        return;
-    }
-    
-    // Update the page with the post
-    const dayEl = document.getElementById('post-day');
-    const monthEl = document.getElementById('post-month');
-    const yearEl = document.getElementById('post-year');
-    const titleEl = document.getElementById('post-title');
-    const contentEl = document.getElementById('post-content');
-    
-    if (dayEl) dayEl.textContent = displayDate.getDate();
-    if (monthEl) monthEl.textContent = displayDate.toLocaleDateString('en-US', { month: 'long' });
-    if (yearEl) yearEl.textContent = displayDate.getFullYear();
-    if (titleEl) titleEl.textContent = post.title;
-    if (contentEl) contentEl.innerHTML = formatPostContent(post.content, post.images);
-}
-
-function formatPostContent(content, images = []) {
-    // Convert markdown-style formatting to HTML
     let html = content;
     
     // Bold
@@ -111,94 +28,97 @@ function formatPostContent(content, images = []) {
     html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
     
     // Pull quotes (lines starting with >)
-    html = html.replace(/^> (.+)$/gm, '<p class="pull-quote">"$1"</p>');
+    html = html.replace(/^> (.+)$/gm, '</p><p class="pull-quote">"$1"</p><p>');
     
-    // Paragraphs
-    const paragraphs = html.split('\n\n').filter(p => p.trim());
-    html = paragraphs.map((p, i) => {
-        if (p.startsWith('<p class="pull-quote">')) return p;
-        if (i === 0) return `<p class="drop-cap">${p}</p>`;
-        return `<p>${p}</p>`;
-    }).join('\n');
-    
-    // Replace image placeholders [img:0:left], [img:1:right], [img:2:full]
-    html = html.replace(/\[img:(\d+):(\w+)\]/g, (match, index, position) => {
-        const img = images[parseInt(index)];
-        if (!img) return '';
-        
+    // Image placeholders [img:url:position:caption]
+    html = html.replace(/\[img:([^:]+):([^:]+):?([^\]]*)\]/g, (match, url, position, caption) => {
         const posClass = position === 'left' ? 'floating-left' : 
                         position === 'right' ? 'floating-right' : 'full-width';
-        
-        return `<div class="post-image-container ${posClass}">
-            <img src="${img.src}" alt="${img.caption || 'Image'}" class="post-image">
-            ${img.caption ? `<span class="image-caption">${img.caption}</span>` : ''}
-        </div>`;
+        return `</p><div class="post-image-container ${posClass}">
+            <img src="${url}" alt="${caption || 'Image'}" class="post-image">
+            ${caption ? `<span class="image-caption">${caption}</span>` : ''}
+        </div><p>`;
     });
+    
+    // Paragraphs (split by double newline)
+    const paragraphs = html.split('\n\n').filter(p => p.trim());
+    html = paragraphs.map((p, i) => {
+        // Don't wrap if already contains block elements
+        if (p.includes('<p class="pull-quote">') || p.includes('<div class="post-image-container">')) {
+            return p;
+        }
+        // First paragraph gets drop cap
+        if (i === 0) {
+            return `<p class="drop-cap">${p.replace(/\n/g, ' ')}</p>`;
+        }
+        return `<p>${p.replace(/\n/g, ' ')}</p>`;
+    }).join('\n');
+    
+    // Clean up empty paragraphs
+    html = html.replace(/<p><\/p>/g, '');
+    html = html.replace(/<p>\s*<\/p>/g, '');
     
     return html;
 }
 
-function formatDateKey(date) {
-    return date.toISOString().split('T')[0];
+// Format date for display
+function formatDate(dateString) {
+    const date = new Date(dateString + 'T12:00:00');
+    return {
+        day: date.getDate(),
+        month: date.toLocaleDateString('en-US', { month: 'long' }),
+        year: date.getFullYear(),
+        full: date
+    };
 }
 
-// ===================================
-// Scroll Animations
-// ===================================
+// Get the most recent post (for homepage)
+function getMostRecentPost(posts) {
+    if (!posts || posts.length === 0) return null;
+    
+    // Sort by date descending
+    const sorted = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+    return sorted[0];
+}
 
-function initScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
+// Load today's/latest post on homepage
+async function loadHomepage() {
+    const posts = await fetchPosts();
+    const post = getMostRecentPost(posts);
     
-    // Observe archive cards
-    document.querySelectorAll('.archive-card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        observer.observe(card);
-    });
+    if (!post) {
+        document.getElementById('post-title').textContent = 'No posts yet';
+        document.getElementById('post-content').innerHTML = '<p>Check back soon for new content.</p>';
+        return;
+    }
     
-    // Add visible class styles
-    const style = document.createElement('style');
-    style.textContent = `
-        .archive-card.visible {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
+    const date = formatDate(post.date);
+    
+    document.getElementById('post-day').textContent = date.day;
+    document.getElementById('post-month').textContent = date.month;
+    document.getElementById('post-year').textContent = date.year;
+    document.getElementById('post-title').textContent = post.title;
+    document.getElementById('post-content').innerHTML = formatContent(post.content);
+    
+    // Update page title
+    document.title = `${post.title} — Matthew Whitham`;
+}
+
+// Initialize based on current page
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if we're on the homepage
+    if (document.querySelector('.home-container') && !window.location.search.includes('id=')) {
+        // Only load homepage if there's no post.js handling it
+        if (!document.querySelector('script[src="js/post.js"]')) {
+            loadHomepage();
         }
-    `;
-    document.head.appendChild(style);
-}
-
-// ===================================
-// Utility Functions
-// ===================================
-
-function showToast(message, isError = false) {
-    const toast = document.createElement('div');
-    toast.className = `toast ${isError ? 'error' : ''}`;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.remove();
-    }, 3000);
-}
+    }
+});
 
 // Export for use in other modules
 window.BlogUtils = {
-    getPosts,
-    savePosts,
-    getScheduledPosts,
-    saveScheduledPosts,
-    formatPostContent,
-    formatDateKey,
-    showToast
+    fetchPosts,
+    formatContent,
+    formatDate,
+    getMostRecentPost
 };

@@ -788,6 +788,15 @@ body {
     color: var(--forest-light);
 }
 
+.post-nav-link.disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.post-nav-link.disabled:hover {
+    color: var(--text-secondary);
+}
+
 /* ===================================
    Admin Styles
    =================================== */
