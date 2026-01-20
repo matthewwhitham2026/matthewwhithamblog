@@ -128,10 +128,46 @@ body {
     text-decoration: none;
     letter-spacing: 0.1em;
     transition: color 0.3s ease;
+    z-index: 101;
 }
 
 .nav-logo:hover {
     color: var(--forest-light);
+}
+
+/* Hamburger Menu Toggle */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 101;
+    gap: 6px;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
 }
 
 .nav-links {
@@ -171,6 +207,43 @@ body {
 .nav-link:hover::after,
 .nav-link.active::after {
     width: 100%;
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: flex;
+    }
+    
+    .nav-links {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--bg-deep);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: var(--space-lg);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-links.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .nav-link {
+        font-size: 1rem;
+        letter-spacing: 0.3em;
+    }
+    
+    .main-nav {
+        padding: var(--space-sm) var(--space-md);
+    }
 }
 
 /* Home Container */
@@ -798,185 +871,6 @@ body {
 }
 
 /* ===================================
-   Admin Styles
-   =================================== */
-
-.admin-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: calc(var(--space-xl) + var(--space-lg)) var(--space-md) var(--space-xl);
-    position: relative;
-    z-index: 1;
-}
-
-.admin-header {
-    margin-bottom: var(--space-lg);
-}
-
-.admin-title {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--text-primary);
-}
-
-.admin-form {
-    background: var(--bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    padding: var(--space-lg);
-}
-
-.form-group {
-    margin-bottom: var(--space-md);
-}
-
-.form-label {
-    display: block;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--text-secondary);
-    margin-bottom: var(--space-xs);
-}
-
-.form-input,
-.form-textarea {
-    width: 100%;
-    padding: var(--space-sm);
-    font-family: var(--font-body);
-    font-size: 1rem;
-    color: var(--text-primary);
-    background: var(--bg-deep);
-    border: 1px solid var(--bg-elevated);
-    transition: border-color 0.3s ease;
-}
-
-.form-input:focus,
-.form-textarea:focus {
-    outline: none;
-    border-color: var(--forest-green);
-}
-
-.form-textarea {
-    min-height: 400px;
-    resize: vertical;
-    line-height: 1.8;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-md);
-}
-
-.form-actions {
-    display: flex;
-    gap: var(--space-md);
-    margin-top: var(--space-lg);
-}
-
-.btn {
-    padding: var(--space-sm) var(--space-lg);
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, var(--forest-green) 0%, var(--forest-light) 100%);
-    color: var(--text-primary);
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(45, 90, 74, 0.3);
-}
-
-.btn-secondary {
-    background: transparent;
-    color: var(--text-secondary);
-    border: 1px solid var(--bg-elevated);
-}
-
-.btn-secondary:hover {
-    border-color: var(--witchy-purple);
-    color: var(--text-primary);
-}
-
-/* Image Upload Area */
-.image-upload-area {
-    border: 2px dashed var(--bg-elevated);
-    padding: var(--space-lg);
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.image-upload-area:hover {
-    border-color: var(--forest-green);
-    background: rgba(45, 90, 74, 0.05);
-}
-
-.upload-icon {
-    width: 40px;
-    height: 40px;
-    margin: 0 auto var(--space-sm);
-    opacity: 0.5;
-}
-
-.upload-text {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-
-.uploaded-images {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
-    margin-top: var(--space-md);
-}
-
-.uploaded-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border: 1px solid var(--bg-elevated);
-}
-
-/* Schedule Options */
-.schedule-options {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    padding: var(--space-md);
-    background: var(--bg-deep);
-    border: 1px solid var(--bg-elevated);
-}
-
-.schedule-toggle {
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
-    cursor: pointer;
-}
-
-.schedule-toggle input {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--forest-green);
-}
-
-.schedule-datetime {
-    flex: 1;
-}
-
-/* ===================================
    Responsive Design
    =================================== */
 
@@ -1004,14 +898,6 @@ body {
     
     .main-nav {
         padding: var(--space-sm) var(--space-md);
-    }
-    
-    .nav-links {
-        gap: var(--space-sm);
-    }
-    
-    .nav-link {
-        font-size: 0.65rem;
     }
     
     .home-container,
@@ -1062,20 +948,11 @@ body {
     .about-name {
         font-size: 2.5rem;
     }
-    
-    .form-row {
-        grid-template-columns: 1fr;
-    }
 }
 
 @media (max-width: 480px) {
     .nav-logo {
         font-size: 1.4rem;
-    }
-    
-    .nav-link {
-        font-size: 0.6rem;
-        letter-spacing: 0.1em;
     }
     
     .date-day {

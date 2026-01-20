@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- Social Meta Tags -->
+    <meta property="og:title" content="Now — Matthew Whitham">
+    <meta property="og:description" content="What I'm currently working on, reading, watching, and listening to.">
+    <meta property="og:image" content="images/og-image.jpg">
+    <meta property="og:url" content="https://matthewwhitham.com/now.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <title>Now — Matthew Whitham</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .now-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: calc(var(--space-xl) + var(--space-lg)) var(--space-md) var(--space-xl);
+            position: relative;
+            z-index: 1;
+        }
+
+        .now-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .now-title {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .now-subtitle {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--text-muted);
+        }
+
+        .now-updated {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: var(--space-sm);
+            font-style: italic;
+        }
+
+        /* Now Sections */
+        .now-section {
+            margin-bottom: var(--space-xl);
+            padding-bottom: var(--space-xl);
+            border-bottom: 1px solid var(--bg-elevated);
+        }
+
+        .now-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.6;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 400;
+            font-style: italic;
+            color: var(--witchy-light);
+        }
+
+        .section-content {
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        /* Working On */
+        .working-on-text {
+            font-size: 1rem;
+        }
+
+        .working-on-text p {
+            margin-bottom: var(--space-md);
+        }
+
+        /* Media Card (for book and show) */
+        .media-card {
+            display: flex;
+            gap: var(--space-md);
+            align-items: flex-start;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: var(--space-md);
+        }
+
+        .media-image {
+            width: 120px;
+            height: auto;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .media-info {
+            flex: 1;
+        }
+
+        .media-title {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .media-author {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .media-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Song of the Day */
+        .song-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: var(--space-md);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .song-card:hover {
+            background: var(--bg-elevated);
+            border-color: var(--forest-green);
+            transform: translateX(5px);
+        }
+
+        .song-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--forest-green), var(--witchy-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .song-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-primary);
+        }
+
+        .song-info {
+            flex: 1;
+        }
+
+        .song-title {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--text-primary);
+        }
+
+        .song-artist {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .song-play {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--forest-light);
+        }
+
+        /* Playlist */
+        .playlist-embed {
+            margin-top: var(--space-sm);
+        }
+
+        .playlist-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--bg-elevated);
+            margin-top: var(--space-md);
+            transition: all 0.3s ease;
+        }
+
+        .playlist-link:hover {
+            border-color: var(--forest-green);
+            color: var(--text-primary);
+        }
+
+        .playlist-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .now-title {
+                font-size: 2.5rem;
+            }
+
+            .media-card {
+                flex-direction: column;
+            }
+
+            .media-image {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient background effects -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="grain-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <a href="index.html" class="nav-logo">MW</a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="index.html" class="nav-link">Today</a>
+            <a href="archive.html" class="nav-link">Archive</a>
+            <a href="visuals.html" class="nav-link">Visuals</a>
+            <a href="now.html" class="nav-link active">Now</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="support.html" class="nav-link">Support</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="now-container">
+        <header class="now-header">
+            <h1 class="now-title">Now</h1>
+            <p class="now-subtitle">What I'm currently into</p>
+            <p class="now-updated">Last updated: <span id="last-updated">January 2026</span></p>
+        </header>
+
+        <!-- Working On -->
+        <section class="now-section">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                </svg>
+                <h2 class="section-title">Working On</h2>
+            </div>
+            <div class="section-content working-on-text" id="working-on">
+                <p>Loading...</p>
+            </div>
+        </section>
+
+        <!-- Currently Reading -->
+        <section class="now-section">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                <h2 class="section-title">Currently Reading</h2>
+            </div>
+            <div class="section-content">
+                <div class="media-card" id="reading-card">
+                    <img src="" alt="" class="media-image" id="book-image">
+                    <div class="media-info">
+                        <h3 class="media-title" id="book-title">Loading...</h3>
+                        <p class="media-author" id="book-author"></p>
+                        <p class="media-description" id="book-thoughts"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Song of the Day -->
+        <section class="now-section">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zm12-2c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"/>
+                </svg>
+                <h2 class="section-title">Song of the Day</h2>
+            </div>
+            <div class="section-content">
+                <a href="" target="_blank" class="song-card" id="song-card">
+                    <div class="song-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </div>
+                    <div class="song-info">
+                        <p class="song-title" id="song-title">Loading...</p>
+                        <p class="song-artist" id="song-artist"></p>
+                    </div>
+                    <span class="song-play">Play on Spotify →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Playlist -->
+        <section class="now-section">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+                <h2 class="section-title">On Repeat</h2>
+            </div>
+            <div class="section-content">
+                <p id="playlist-description">Loading...</p>
+                <a href="" target="_blank" class="playlist-link" id="playlist-link">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.76-8.786-.963-.335.077-.67-.133-.746-.47-.077-.334.132-.67.47-.745 3.808-.87 7.076-.496 9.712 1.115.293.18.386.563.206.856zm1.22-2.716c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.13-9.965-1.166-.413.127-.848-.106-.973-.517-.125-.413.108-.848.52-.973 3.632-1.102 8.147-.568 11.234 1.328.366.226.48.707.256 1.072zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71c-.493.15-1.016-.13-1.166-.624-.148-.495.13-1.017.625-1.167 3.532-1.073 9.404-.866 13.115 1.337.445.264.59.838.327 1.282-.264.443-.838.59-1.282.325z"/>
+                    </svg>
+                    Open Playlist
+                </a>
+            </div>
+        </section>
+
+        <!-- Currently Watching -->
+        <section class="now-section">
+            <div class="section-header">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                <h2 class="section-title">Currently Watching</h2>
+            </div>
+            <div class="section-content">
+                <div class="media-card" id="watching-card">
+                    <img src="" alt="" class="media-image" id="show-image">
+                    <div class="media-info">
+                        <h3 class="media-title" id="show-title">Loading...</h3>
+                        <p class="media-author" id="show-platform"></p>
+                        <p class="media-description" id="show-thoughts"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Load now data from JSON
+        async function loadNow() {
+            try {
+                const timestamp = new Date().getTime();
+                const response = await fetch('now.json?t=' + timestamp);
+                const data = await response.json();
+                
+                // Last updated
+                if (data.lastUpdated) {
+                    document.getElementById('last-updated').textContent = data.lastUpdated;
+                }
+                
+                // Working on
+                if (data.workingOn) {
+                    document.getElementById('working-on').innerHTML = data.workingOn.split('\n\n').map(p => `<p>${p}</p>`).join('');
+                }
+                
+                // Reading
+                if (data.reading) {
+                    document.getElementById('book-image').src = 'images/now/' + data.reading.image;
+                    document.getElementById('book-image').alt = data.reading.title;
+                    document.getElementById('book-title').textContent = data.reading.title;
+                    document.getElementById('book-author').textContent = 'by ' + data.reading.author;
+                    document.getElementById('book-thoughts').textContent = data.reading.thoughts;
+                }
+                
+                // Song of the day
+                if (data.song) {
+                    document.getElementById('song-card').href = data.song.spotifyUrl;
+                    document.getElementById('song-title').textContent = data.song.title;
+                    document.getElementById('song-artist').textContent = data.song.artist;
+                }
+                
+                // Playlist
+                if (data.playlist) {
+                    document.getElementById('playlist-description').textContent = data.playlist.description;
+                    document.getElementById('playlist-link').href = data.playlist.spotifyUrl;
+                }
+                
+                // Watching
+                if (data.watching) {
+                    document.getElementById('show-image').src = 'images/now/' + data.watching.image;
+                    document.getElementById('show-image').alt = data.watching.title;
+                    document.getElementById('show-title').textContent = data.watching.title;
+                    document.getElementById('show-platform').textContent = data.watching.platform;
+                    document.getElementById('show-thoughts').textContent = data.watching.thoughts;
+                }
+                
+            } catch (error) {
+                console.error('Error loading now data:', error);
+            }
+        }
+        
+        // Mobile nav toggle
+        document.getElementById('nav-toggle').addEventListener('click', function() {
+            document.getElementById('nav-links').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+        
+        loadNow();
+    </script>
+</body>
+</html>

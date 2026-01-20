@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Social Meta Tags -->
+    <meta property="og:title" content="Collected Visuals — Matthew Whitham">
+    <meta property="og:description" content="Fragments of inspiration gathered from the corners of the internet.">
+    <meta property="og:image" content="images/og-image.jpg">
+    <meta property="og:url" content="https://matthewwhitham.com/visuals.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
     <title>Collected Visuals — Matthew Whitham</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
@@ -224,10 +234,16 @@
     <!-- Navigation -->
     <nav class="main-nav">
         <a href="index.html" class="nav-logo">MW</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="index.html" class="nav-link">Today</a>
             <a href="archive.html" class="nav-link">Archive</a>
             <a href="visuals.html" class="nav-link active">Visuals</a>
+            <a href="now.html" class="nav-link">Now</a>
             <a href="about.html" class="nav-link">About</a>
             <a href="support.html" class="nav-link">Support</a>
         </div>
@@ -237,7 +253,7 @@
     <main class="visuals-container">
         <header class="visuals-header">
             <h1 class="visuals-title">Collected Visuals</h1>
-            <p class="visuals-subtitle">Inspiration, Photos I relate to, Photos I feel connected to. Nothing is here by chance</p>
+            <p class="visuals-subtitle">Fragments of inspiration gathered from the corners of the internet — things that caught my eye and held it</p>
         </header>
 
         <div class="masonry-grid" id="visuals-grid">
@@ -253,10 +269,25 @@
     </div>
 
     <script>
+        // Mobile nav toggle
+        document.getElementById('nav-toggle').addEventListener('click', function() {
+            document.getElementById('nav-links').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('nav-links').classList.remove('active');
+                document.getElementById('nav-toggle').classList.remove('active');
+            });
+        });
+
         // Load visuals from JSON
         async function loadVisuals() {
             try {
-                const response = await fetch('visuals.json');
+                const timestamp = new Date().getTime();
+                const response = await fetch('visuals.json?t=' + timestamp);
                 const data = await response.json();
                 renderVisuals(data.visuals || []);
             } catch (error) {
@@ -313,7 +344,7 @@
         });
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', loadVisuals);
+        loadVisuals();
     </script>
 </body>
 </html>
