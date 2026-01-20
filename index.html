@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Matthew Whitham</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,6 +53,86 @@
         </footer>
     </main>
 
-    <script src="js/main.js"></script>
+    <script>
+        // Load posts with cache-busting
+        async function loadHomepage() {
+            try {
+                const timestamp = new Date().getTime();
+                const response = await fetch('posts.json?t=' + timestamp);
+                const data = await response.json();
+                const posts = data.posts || [];
+                
+                if (!posts || posts.length === 0) {
+                    document.getElementById('post-title').textContent = 'No posts yet';
+                    document.getElementById('post-content').innerHTML = '<p>Check back soon for new content.</p>';
+                    return;
+                }
+                
+                // Sort by date descending and get most recent
+                const sorted = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
+                const post = sorted[0];
+                
+                const date = new Date(post.date + 'T12:00:00');
+                
+                document.getElementById('post-day').textContent = date.getDate();
+                document.getElementById('post-month').textContent = date.toLocaleDateString('en-US', { month: 'long' });
+                document.getElementById('post-year').textContent = date.getFullYear();
+                document.getElementById('post-title').textContent = post.title;
+                document.getElementById('post-content').innerHTML = formatContent(post.content);
+                document.title = post.title + ' — Matthew Whitham';
+                
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                document.getElementById('post-title').textContent = 'Welcome';
+                document.getElementById('post-content').innerHTML = '<p>Check back soon for new content.</p>';
+            }
+        }
+        
+        function formatContent(content) {
+            if (!content) return '';
+            
+            let html = content;
+            
+            // Bold
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            
+            // Italic
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            
+            // Pull quotes
+            html = html.replace(/^> (.+)$/gm, '</p><p class="pull-quote">"$1"</p><p>');
+            
+            // Image placeholders
+            html = html.replace(/\[img:([^:]+):([^:]+):?([^\]]*)\]/g, (match, url, position, caption) => {
+                const posClass = position === 'left' ? 'floating-left' : 
+                                position === 'right' ? 'floating-right' : 'full-width';
+                return '</p><div class="post-image-container ' + posClass + '">' +
+                    '<img src="' + url + '" alt="' + (caption || 'Image') + '" class="post-image">' +
+                    (caption ? '<span class="image-caption">' + caption + '</span>' : '') +
+                    '</div><p>';
+            });
+            
+            // Paragraphs
+            const paragraphs = html.split('\n\n').filter(p => p.trim());
+            html = paragraphs.map((p, i) => {
+                if (p.includes('<p class="pull-quote">') || p.includes('<div class="post-image-container">')) {
+                    return p;
+                }
+                if (i === 0) {
+                    return '<p class="drop-cap">' + p.replace(/\n/g, ' ') + '</p>';
+                }
+                return '<p>' + p.replace(/\n/g, ' ') + '</p>';
+            }).join('\n');
+            
+            // Clean up
+            html = html.replace(/<p><\/p>/g, '');
+            html = html.replace(/<p>\s*<\/p>/g, '');
+            
+            return html;
+        }
+        
+        // Load immediately
+        loadHomepage();
+    </script>
 </body>
 </html>
