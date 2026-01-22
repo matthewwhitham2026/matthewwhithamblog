@@ -49,26 +49,7 @@ Open `posts.json` and add a new entry to the `posts` array:
 
 ## File Structure
 
-```
-├── index.html      # Homepage (shows latest post)
-├── archive.html    # Archive of all posts
-├── post.html       # Individual post viewer
-├── about.html      # About page
-├── support.html    # Support page
-├── posts.json      # ALL YOUR POSTS LIVE HERE
-├── css/
-│   └── style.css
-├── js/
-│   ├── main.js
-│   ├── archive.js
-│   └── post.js
-└── images/         # Put your images here
-```
 
-## Custom Domain
 
-Your site is live at **matthewwhitham.com**
 
-## Need Help?
 
-Just ask! I can update the code anytime you need changes.
