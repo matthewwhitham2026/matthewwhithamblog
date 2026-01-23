@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Noise — Matthew Whitham">
+    <meta property="og:description" content="A chaotic collage of sound and visuals.">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Noise — Matthew Whitham</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .noise-container {
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            padding: 120px 20px 100px;
+            overflow-x: hidden;
+        }
+
+        .noise-title {
+            font-family: var(--font-display);
+            font-size: 8rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-primary);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-5deg);
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+            letter-spacing: 0.2em;
+        }
+
+        .collage-wall {
+            position: relative;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 200vh;
+        }
+
+        .collage-item {
+            position: absolute;
+            transition: transform 0.3s ease, z-index 0s;
+        }
+
+        .collage-item:hover {
+            z-index: 50;
+            transform: scale(1.05) rotate(0deg) !important;
+        }
+
+        .collage-image {
+            display: block;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Tape effect */
+        .tape {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background: rgba(255, 255, 200, 0.15);
+            transform: rotate(-2deg);
+        }
+
+        .tape-top {
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(2deg);
+        }
+
+        .tape-corner {
+            top: -5px;
+            right: -10px;
+            transform: rotate(45deg);
+            width: 40px;
+            height: 15px;
+        }
+
+        /* Individual positioning - chaotic placement */
+        .item-1 {
+            top: 0;
+            left: 5%;
+            transform: rotate(-8deg);
+        }
+        .item-1 img {
+            width: 320px;
+            filter: contrast(1.1) saturate(0.9);
+        }
+
+        .item-2 {
+            top: 50px;
+            right: 10%;
+            transform: rotate(5deg);
+        }
+        .item-2 img {
+            width: 250px;
+        }
+
+        .item-3 {
+            top: 380px;
+            left: 25%;
+            transform: rotate(-3deg);
+        }
+        .item-3 img {
+            width: 150px;
+            border-radius: 50%;
+        }
+
+        .item-4 {
+            top: 300px;
+            right: 5%;
+            transform: rotate(12deg);
+        }
+        .item-4 img {
+            width: 280px;
+        }
+
+        .item-5 {
+            top: 650px;
+            left: 2%;
+            transform: rotate(6deg);
+        }
+        .item-5 img {
+            width: 300px;
+        }
+
+        .item-6 {
+            top: 550px;
+            right: 15%;
+            transform: rotate(-10deg);
+        }
+        .item-6 img {
+            width: 220px;
+        }
+
+        /* Spotify embeds positioning */
+        .spotify-item {
+            position: absolute;
+            transform-origin: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .spotify-1 {
+            top: 180px;
+            left: 40%;
+            transform: rotate(3deg);
+        }
+
+        .spotify-2 {
+            top: 480px;
+            left: 55%;
+            transform: rotate(-6deg);
+        }
+
+        .spotify-3 {
+            top: 780px;
+            left: 15%;
+            transform: rotate(8deg);
+        }
+
+        .spotify-4 {
+            top: 920px;
+            right: 8%;
+            transform: rotate(-4deg);
+        }
+
+        .spotify-5 {
+            top: 1150px;
+            left: 35%;
+            transform: rotate(5deg);
+        }
+
+        .spotify-6 {
+            top: 1350px;
+            right: 20%;
+            transform: rotate(-7deg);
+        }
+
+        /* Scattered text elements */
+        .noise-text {
+            position: absolute;
+            font-family: var(--font-display);
+            font-style: italic;
+            color: var(--text-muted);
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .text-1 {
+            top: 280px;
+            left: 60%;
+            font-size: 1.5rem;
+            transform: rotate(-12deg);
+        }
+
+        .text-2 {
+            top: 700px;
+            right: 40%;
+            font-size: 2rem;
+            transform: rotate(8deg);
+        }
+
+        .text-3 {
+            top: 1050px;
+            left: 5%;
+            font-size: 1.2rem;
+            transform: rotate(-5deg);
+        }
+
+        /* Decorative elements */
+        .scribble {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--witchy-purple), transparent);
+            opacity: 0.3;
+        }
+
+        .scribble-1 {
+            top: 400px;
+            left: 70%;
+            transform: rotate(25deg);
+            width: 150px;
+        }
+
+        .scribble-2 {
+            top: 850px;
+            left: 45%;
+            transform: rotate(-15deg);
+            width: 80px;
+        }
+
+        .scribble-3 {
+            top: 1200px;
+            right: 30%;
+            transform: rotate(40deg);
+            width: 120px;
+        }
+
+        /* Star/dot decorations */
+        .dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--forest-light);
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+
+        .dot-1 { top: 150px; left: 35%; }
+        .dot-2 { top: 520px; right: 35%; }
+        .dot-3 { top: 880px; left: 50%; }
+        .dot-4 { top: 1100px; right: 45%; }
+        .dot-5 { top: 1300px; left: 25%; }
+
+        /* Mobile adjustments */
+        @media (max-width: 900px) {
+            .collage-wall {
+                min-height: 280vh;
+            }
+
+            .noise-title {
+                font-size: 4rem;
+            }
+
+            .collage-item img {
+                max-width: 200px !important;
+                width: auto !important;
+            }
+
+            .item-1 { top: 0; left: 5%; }
+            .item-2 { top: 280px; right: 5%; }
+            .item-3 { top: 500px; left: 10%; }
+            .item-4 { top: 720px; right: 10%; }
+            .item-5 { top: 980px; left: 5%; }
+            .item-6 { top: 1200px; right: 5%; }
+
+            .spotify-item iframe {
+                width: 280px !important;
+            }
+
+            .spotify-1 { top: 150px; left: 30%; }
+            .spotify-2 { top: 420px; left: 5%; }
+            .spotify-3 { top: 650px; right: 5%; left: auto; }
+            .spotify-4 { top: 900px; left: 10%; right: auto; }
+            .spotify-5 { top: 1120px; right: 5%; left: auto; }
+            .spotify-6 { top: 1380px; left: 15%; right: auto; }
+
+            .noise-text {
+                display: none;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .collage-wall {
+                min-height: 350vh;
+            }
+
+            .collage-item img {
+                max-width: 160px !important;
+            }
+
+            .spotify-item iframe {
+                width: 250px !important;
+                height: 80px !important;
+            }
+
+            .item-1 { top: 0; left: 10%; }
+            .item-2 { top: 220px; right: 10%; }
+            .item-3 { top: 420px; left: 20%; }
+            .item-4 { top: 600px; right: 5%; }
+            .item-5 { top: 850px; left: 5%; }
+            .item-6 { top: 1080px; right: 10%; }
+
+            .spotify-1 { top: 120px; left: 5%; right: auto; }
+            .spotify-2 { top: 340px; right: 5%; left: auto; }
+            .spotify-3 { top: 540px; left: 5%; right: auto; }
+            .spotify-4 { top: 760px; right: 5%; left: auto; }
+            .spotify-5 { top: 980px; left: 5%; right: auto; }
+            .spotify-6 { top: 1250px; right: 5%; left: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="grain-overlay"></div>
+
+    <nav class="main-nav">
+        <a href="index.html" class="nav-logo">MW</a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="index.html" class="nav-link">Today</a>
+            <a href="archive.html" class="nav-link">Archive</a>
+            <a href="visuals.html" class="nav-link">Visuals</a>
+            <a href="noise.html" class="nav-link active">Noise</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="support.html" class="nav-link">Support</a>
+        </div>
+    </nav>
+
+    <div class="noise-title">NOISE</div>
+
+    <main class="noise-container">
+        <div class="collage-wall">
+            
+            <!-- Images scattered -->
+            <div class="collage-item item-1">
+                <div class="tape tape-top"></div>
+                <img src="images/noise/noise1.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-2">
+                <div class="tape tape-corner"></div>
+                <img src="images/noise/noise3.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-3">
+                <img src="images/noise/noise2.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-4">
+                <div class="tape tape-top"></div>
+                <img src="images/noise/noise4.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-5">
+                <div class="tape tape-corner"></div>
+                <img src="images/noise/noise5.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-6">
+                <img src="images/noise/noise6.jpg" alt="" class="collage-image">
+            </div>
+
+            <!-- Spotify embeds scattered -->
+            <div class="spotify-item spotify-1">
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1j581GCDFQ9P8xd6fyjgLt?utm_source=generator&theme=0" width="300" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-2">
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/53uhTsdGotEgrDAJydRSov?utm_source=generator&theme=0" width="300" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-3">
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/5q0N5SaFhROG9UQiPukv9p?utm_source=generator&theme=0" width="300" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-4">
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7Ei2LsA34MJPITPv72dvZw?utm_source=generator&theme=0" width="300" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-5">
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/57L5EYzCfHS7Jd58rV33lW?utm_source=generator&theme=0" width="300" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-6">
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6kqlHdAgxs12KJCrnVKfht?utm_source=generator&theme=0" width="300" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <!-- Scattered text -->
+            <div class="noise-text text-1">listen</div>
+            <div class="noise-text text-2">feel something</div>
+            <div class="noise-text text-3">loud</div>
+
+            <!-- Decorative elements -->
+            <div class="scribble scribble-1"></div>
+            <div class="scribble scribble-2"></div>
+            <div class="scribble scribble-3"></div>
+
+            <div class="dot dot-1"></div>
+            <div class="dot dot-2"></div>
+            <div class="dot dot-3"></div>
+            <div class="dot dot-4"></div>
+            <div class="dot dot-5"></div>
+
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('nav-toggle').addEventListener('click', function() {
+            document.getElementById('nav-links').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('nav-links').classList.remove('active');
+                document.getElementById('nav-toggle').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
