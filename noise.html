@@ -12,27 +12,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        html, body {
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-            margin: 0;
-            padding: 0;
-        }
-
         .noise-container {
-            height: 100vh;
-            width: 100vw;
-            position: fixed;
-            top: 0;
-            left: 0;
+            min-height: 100vh;
+            position: relative;
             z-index: 1;
-            overflow: hidden;
+            padding: 100px 0 50px;
+            overflow-x: hidden;
         }
 
         .noise-title {
             font-family: var(--font-display);
-            font-size: 20vw;
+            font-size: 18rem;
             font-weight: 300;
             font-style: italic;
             color: var(--text-primary);
@@ -40,7 +30,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-8deg);
-            opacity: 0.025;
+            opacity: 0.015;
             pointer-events: none;
             z-index: 0;
             white-space: nowrap;
@@ -48,19 +38,20 @@
 
         .collage-wall {
             position: relative;
-            width: 100%;
-            height: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 200vh;
         }
 
         .collage-item {
             position: absolute;
-            transition: transform 0.3s ease, z-index 0s;
+            transition: transform 0.2s ease, z-index 0s;
             cursor: pointer;
         }
 
         .collage-item:hover {
             z-index: 200 !important;
-            transform: scale(1.15) rotate(0deg) !important;
+            transform: scale(1.1) rotate(0deg) !important;
         }
 
         .collage-image {
@@ -75,142 +66,175 @@
             z-index: 2;
         }
         .tape-h { width: 40px; height: 14px; }
-        .tape-top { top: -6px; left: 50%; transform: translateX(-50%) rotate(2deg); }
+        .tape-top { top: -6px; left: 50%; transform: translateX(-50%) rotate(3deg); }
         .tape-corner { top: -4px; right: -6px; transform: rotate(45deg); width: 30px; }
 
-        /* 20 images packed tight - using vh/vw for responsive positioning */
-        .item-1 { top: 8vh; left: 2vw; transform: rotate(-12deg); z-index: 10; }
-        .item-1 img { width: min(180px, 18vw); }
+        /* TIGHT CHAOTIC LAYOUT - everything crammed together */
+        
+        /* Row 1 - top cluster */
+        .item-1 { top: 0; left: 2%; transform: rotate(-8deg); z-index: 15; }
+        .item-1 img { width: 220px; }
+        
+        .item-2 { top: 30px; left: 18%; transform: rotate(5deg); z-index: 12; }
+        .item-2 img { width: 180px; }
+        
+        .item-3 { top: 10px; left: 38%; transform: rotate(-3deg); z-index: 18; }
+        .item-3 img { width: 100px; border-radius: 50%; }
+        
+        .item-4 { top: 0; left: 52%; transform: rotate(10deg); z-index: 14; }
+        .item-4 img { width: 200px; }
+        
+        .item-5 { top: 40px; right: 5%; transform: rotate(-12deg); z-index: 16; }
+        .item-5 img { width: 240px; }
 
-        .item-2 { top: 5vh; left: 22vw; transform: rotate(6deg); z-index: 12; }
-        .item-2 img { width: min(140px, 14vw); }
+        /* Row 2 - overlapping heavily */
+        .item-6 { top: 180px; left: 5%; transform: rotate(12deg); z-index: 20; }
+        .item-6 img { width: 160px; }
+        
+        .item-7 { top: 200px; left: 22%; transform: rotate(-6deg); z-index: 13; }
+        .item-7 img { width: 200px; }
+        
+        .item-8 { top: 160px; left: 45%; transform: rotate(4deg); z-index: 22; }
+        .item-8 img { width: 170px; }
+        
+        .item-9 { top: 220px; right: 15%; transform: rotate(-9deg); z-index: 17; }
+        .item-9 img { width: 190px; }
+        
+        .item-10 { top: 170px; right: 2%; transform: rotate(7deg); z-index: 11; }
+        .item-10 img { width: 150px; }
 
-        .item-3 { top: 12vh; left: 42vw; transform: rotate(-4deg); z-index: 8; }
-        .item-3 img { width: min(100px, 10vw); border-radius: 50%; }
+        /* Row 3 */
+        .item-11 { top: 360px; left: 0; transform: rotate(-5deg); z-index: 19; }
+        .item-11 img { width: 210px; }
+        
+        .item-12 { top: 380px; left: 20%; transform: rotate(8deg); z-index: 14; }
+        .item-12 img { width: 180px; }
+        
+        .item-13 { top: 340px; left: 42%; transform: rotate(-11deg); z-index: 21; }
+        .item-13 img { width: 160px; }
+        
+        .item-14 { top: 390px; right: 18%; transform: rotate(6deg); z-index: 16; }
+        .item-14 img { width: 200px; }
+        
+        .item-15 { top: 350px; right: 0; transform: rotate(-4deg); z-index: 13; }
+        .item-15 img { width: 170px; }
 
-        .item-4 { top: 6vh; right: 18vw; transform: rotate(9deg); z-index: 14; }
-        .item-4 img { width: min(160px, 16vw); }
+        /* Row 4 */
+        .item-16 { top: 530px; left: 8%; transform: rotate(9deg); z-index: 18; }
+        .item-16 img { width: 190px; }
+        
+        .item-17 { top: 550px; left: 30%; transform: rotate(-7deg); z-index: 15; }
+        .item-17 img { width: 160px; }
+        
+        .item-18 { top: 510px; left: 50%; transform: rotate(3deg); z-index: 20; }
+        .item-18 img { width: 220px; }
+        
+        .item-19 { top: 560px; right: 12%; transform: rotate(-10deg); z-index: 12; }
+        .item-19 img { width: 180px; }
+        
+        .item-20 { top: 520px; right: 0; transform: rotate(11deg); z-index: 17; }
+        .item-20 img { width: 150px; }
 
-        .item-5 { top: 8vh; right: 2vw; transform: rotate(-7deg); z-index: 11; }
-        .item-5 img { width: min(150px, 15vw); }
-
-        .item-6 { top: 32vh; left: 1vw; transform: rotate(14deg); z-index: 13; }
-        .item-6 img { width: min(130px, 13vw); }
-
-        .item-7 { top: 28vh; left: 18vw; transform: rotate(-8deg); z-index: 9; }
-        .item-7 img { width: min(170px, 17vw); }
-
-        .item-8 { top: 35vh; left: 40vw; transform: rotate(5deg); z-index: 15; }
-        .item-8 img { width: min(120px, 12vw); }
-
-        .item-9 { top: 30vh; right: 20vw; transform: rotate(-11deg); z-index: 10; }
-        .item-9 img { width: min(145px, 14vw); }
-
-        .item-10 { top: 26vh; right: 1vw; transform: rotate(8deg); z-index: 12; }
-        .item-10 img { width: min(160px, 16vw); }
-
-        .item-11 { top: 55vh; left: 3vw; transform: rotate(-6deg); z-index: 14; }
-        .item-11 img { width: min(140px, 14vw); }
-
-        .item-12 { top: 52vh; left: 20vw; transform: rotate(10deg); z-index: 8; }
-        .item-12 img { width: min(155px, 15vw); }
-
-        .item-13 { top: 58vh; left: 42vw; transform: rotate(-13deg); z-index: 11; }
-        .item-13 img { width: min(125px, 12vw); }
-
-        .item-14 { top: 54vh; right: 18vw; transform: rotate(7deg); z-index: 13; }
-        .item-14 img { width: min(165px, 16vw); }
-
-        .item-15 { top: 50vh; right: 2vw; transform: rotate(-9deg); z-index: 9; }
-        .item-15 img { width: min(135px, 13vw); }
-
-        .item-16 { top: 78vh; left: 2vw; transform: rotate(12deg); z-index: 10; }
-        .item-16 img { width: min(150px, 15vw); }
-
-        .item-17 { top: 75vh; left: 22vw; transform: rotate(-5deg); z-index: 15; }
-        .item-17 img { width: min(130px, 13vw); }
-
-        .item-18 { top: 80vh; left: 45vw; transform: rotate(8deg); z-index: 12; }
-        .item-18 img { width: min(140px, 14vw); }
-
-        .item-19 { top: 76vh; right: 15vw; transform: rotate(-10deg); z-index: 14; }
-        .item-19 img { width: min(160px, 16vw); }
-
-        .item-20 { top: 72vh; right: 1vw; transform: rotate(6deg); z-index: 11; }
-        .item-20 img { width: min(145px, 14vw); }
-
-        /* Spotify embeds - compact 80px height, no scroll */
+        /* Spotify - crammed in between */
         .spotify-item {
             position: absolute;
-            z-index: 50;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            z-index: 25;
         }
+
+        .spotify-1 { top: 70px; left: 28%; transform: rotate(-5deg); }
+        .spotify-2 { top: 120px; right: 25%; transform: rotate(4deg); }
+        .spotify-3 { top: 280px; left: 8%; transform: rotate(6deg); }
+        .spotify-4 { top: 300px; left: 55%; transform: rotate(-4deg); }
+        .spotify-5 { top: 450px; left: 35%; transform: rotate(5deg); }
+        .spotify-6 { top: 480px; right: 8%; transform: rotate(-6deg); }
+        .spotify-7 { top: 620px; left: 15%; transform: rotate(-3deg); }
+        .spotify-8 { top: 650px; right: 20%; transform: rotate(7deg); }
 
         .spotify-item iframe {
-            border: none !important;
-            border-radius: 12px;
+            width: 250px;
+            height: 80px;
         }
 
-        .spotify-1 { top: 15vh; left: 58vw; transform: rotate(-3deg); }
-        .spotify-2 { top: 38vh; left: 28vw; transform: rotate(4deg); }
-        .spotify-3 { top: 42vh; right: 5vw; transform: rotate(-5deg); }
-        .spotify-4 { top: 62vh; left: 8vw; transform: rotate(3deg); }
-        .spotify-5 { top: 60vh; right: 25vw; transform: rotate(-4deg); }
-        .spotify-6 { top: 85vh; left: 32vw; transform: rotate(5deg); }
-        .spotify-7 { top: 18vh; left: 8vw; transform: rotate(-2deg); }
-        .spotify-8 { top: 68vh; right: 3vw; transform: rotate(3deg); }
-
-        /* Decorative elements */
+        /* Scribbles crammed in */
         .scribble {
             position: absolute;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--witchy-purple), transparent);
-            opacity: 0.2;
+            opacity: 0.3;
             pointer-events: none;
         }
-        .scribble-1 { top: 25vh; left: 35vw; width: 12vw; transform: rotate(35deg); }
-        .scribble-2 { top: 48vh; right: 40vw; width: 8vw; transform: rotate(-20deg); }
-        .scribble-3 { top: 70vh; left: 55vw; width: 15vw; transform: rotate(15deg); }
-        .scribble-4 { top: 88vh; right: 45vw; width: 10vw; transform: rotate(-30deg); }
+        .scribble-1 { top: 150px; left: 40%; width: 100px; transform: rotate(25deg); }
+        .scribble-2 { top: 320px; right: 35%; width: 80px; transform: rotate(-15deg); }
+        .scribble-3 { top: 480px; left: 25%; width: 120px; transform: rotate(40deg); }
+        .scribble-4 { top: 600px; right: 40%; width: 90px; transform: rotate(-30deg); }
 
+        /* Dots scattered tight */
         .dot {
             position: absolute;
             background: var(--forest-light);
             border-radius: 50%;
-            opacity: 0.3;
+            opacity: 0.4;
             pointer-events: none;
         }
-        .dot-1 { top: 20vh; left: 50vw; width: 6px; height: 6px; }
-        .dot-2 { top: 45vh; right: 35vw; width: 8px; height: 8px; }
-        .dot-3 { top: 65vh; left: 38vw; width: 5px; height: 5px; }
-        .dot-4 { top: 82vh; right: 55vw; width: 7px; height: 7px; }
+        .dot-1 { top: 100px; left: 50%; width: 6px; height: 6px; }
+        .dot-2 { top: 250px; right: 30%; width: 8px; height: 8px; }
+        .dot-3 { top: 400px; left: 18%; width: 5px; height: 5px; }
+        .dot-4 { top: 550px; right: 45%; width: 10px; height: 10px; }
+        .dot-5 { top: 180px; left: 70%; width: 4px; height: 4px; }
+        .dot-6 { top: 420px; right: 12%; width: 7px; height: 7px; }
 
+        /* X marks */
         .x-mark {
             position: absolute;
             font-family: var(--font-display);
             font-size: 2.5rem;
             color: var(--witchy-purple);
-            opacity: 0.12;
+            opacity: 0.2;
             pointer-events: none;
         }
-        .x-1 { top: 22vh; right: 30vw; transform: rotate(15deg); }
-        .x-2 { top: 70vh; left: 15vw; transform: rotate(-10deg); }
+        .x-1 { top: 200px; left: 60%; transform: rotate(12deg); }
+        .x-2 { top: 450px; right: 55%; transform: rotate(-8deg); }
 
-        /* Mobile adjustments */
+        /* Mobile */
         @media (max-width: 768px) {
+            .collage-wall {
+                min-height: auto;
+                padding: 10px;
+            }
+
+            .collage-item {
+                position: relative !important;
+                display: inline-block;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                margin: -10px;
+            }
+
             .collage-item img {
-                width: 25vw !important;
-                min-width: 80px;
+                width: 45vw !important;
+                max-width: 180px !important;
+            }
+
+            .spotify-item {
+                position: relative !important;
+                display: block;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                margin: 15px auto;
+                transform: rotate(0deg) !important;
             }
 
             .spotify-item iframe {
-                width: 140px !important;
+                width: 90vw !important;
+                max-width: 350px !important;
                 height: 80px !important;
             }
 
-            .noise-title {
-                font-size: 25vw;
-            }
+            .noise-title { font-size: 4rem; }
+            .scribble, .dot, .x-mark, .tape { display: none; }
         }
     </style>
 </head>
@@ -239,113 +263,143 @@
     <main class="noise-container">
         <div class="collage-wall">
             
-            <!-- 20 Images packed chaotically -->
+            <!-- 20 Images packed tight -->
             <div class="collage-item item-1">
                 <div class="tape tape-h tape-top"></div>
                 <img src="images/noise/noise1.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-2">
                 <img src="images/noise/noise2.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-3">
                 <img src="images/noise/noise3.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-4">
                 <div class="tape tape-h tape-corner"></div>
                 <img src="images/noise/noise4.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-5">
                 <img src="images/noise/noise5.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-6">
                 <div class="tape tape-h tape-top"></div>
                 <img src="images/noise/noise6.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-7">
                 <img src="images/noise/noise7.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-8">
                 <div class="tape tape-h tape-corner"></div>
                 <img src="images/noise/noise8.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-9">
                 <img src="images/noise/noise9.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-10">
                 <div class="tape tape-h tape-top"></div>
                 <img src="images/noise/noise10.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-11">
                 <img src="images/noise/noise11.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-12">
                 <div class="tape tape-h tape-corner"></div>
                 <img src="images/noise/noise12.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-13">
                 <img src="images/noise/noise13.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-14">
                 <div class="tape tape-h tape-top"></div>
                 <img src="images/noise/noise14.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-15">
                 <img src="images/noise/noise15.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-16">
                 <div class="tape tape-h tape-corner"></div>
                 <img src="images/noise/noise16.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-17">
                 <img src="images/noise/noise17.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-18">
                 <div class="tape tape-h tape-top"></div>
                 <img src="images/noise/noise18.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-19">
                 <img src="images/noise/noise19.jpg" alt="" class="collage-image">
             </div>
+
             <div class="collage-item item-20">
                 <div class="tape tape-h tape-corner"></div>
                 <img src="images/noise/noise20.jpg" alt="" class="collage-image">
             </div>
 
-            <!-- 8 Spotify embeds - compact 80px height -->
+            <!-- Spotify crammed in -->
             <div class="spotify-item spotify-1">
-                <iframe src="https://open.spotify.com/embed/track/1j581GCDFQ9P8xd6fyjgLt?utm_source=generator&theme=0" width="180" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-            <div class="spotify-item spotify-2">
-                <iframe src="https://open.spotify.com/embed/track/53uhTsdGotEgrDAJydRSov?utm_source=generator&theme=0" width="180" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-            <div class="spotify-item spotify-3">
-                <iframe src="https://open.spotify.com/embed/track/5q0N5SaFhROG9UQiPukv9p?utm_source=generator&theme=0" width="180" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-            <div class="spotify-item spotify-4">
-                <iframe src="https://open.spotify.com/embed/track/7Ei2LsA34MJPITPv72dvZw?utm_source=generator&theme=0" width="180" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-            <div class="spotify-item spotify-5">
-                <iframe src="https://open.spotify.com/embed/track/6kqlHdAgxs12KJCrnVKfht?utm_source=generator&theme=0" width="180" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-            <div class="spotify-item spotify-6">
-                <iframe src="https://open.spotify.com/embed/track/3VHiIVQe8Sc6gtSsTp3pDz?utm_source=generator&theme=0" width="180" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-            <div class="spotify-item spotify-7">
-                <iframe src="https://open.spotify.com/embed/track/2FwDApgXk91kXvqy2oB7dz?utm_source=generator&theme=0" width="180" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-            <div class="spotify-item spotify-8">
-                <iframe src="https://open.spotify.com/embed/track/4prEPl61C8qZpeo3IkYSMl?utm_source=generator&theme=0" width="180" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <iframe style="border-radius:8px" src="https://open.spotify.com/embed/track/1j581GCDFQ9P8xd6fyjgLt?utm_source=generator&theme=0" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>
 
-            <!-- Decorative chaos -->
+            <div class="spotify-item spotify-2">
+                <iframe style="border-radius:8px" src="https://open.spotify.com/embed/track/53uhTsdGotEgrDAJydRSov?utm_source=generator&theme=0" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-3">
+                <iframe style="border-radius:8px" src="https://open.spotify.com/embed/track/5q0N5SaFhROG9UQiPukv9p?utm_source=generator&theme=0" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-4">
+                <iframe style="border-radius:8px" src="https://open.spotify.com/embed/track/7Ei2LsA34MJPITPv72dvZw?utm_source=generator&theme=0" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-5">
+                <iframe style="border-radius:8px" src="https://open.spotify.com/embed/track/6kqlHdAgxs12KJCrnVKfht?utm_source=generator&theme=0" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-6">
+                <iframe style="border-radius:8px" src="https://open.spotify.com/embed/track/3VHiIVQe8Sc6gtSsTp3pDz?utm_source=generator&theme=0" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-7">
+                <iframe style="border-radius:8px" src="https://open.spotify.com/embed/track/2FwDApgXk91kXvqy2oB7dz?utm_source=generator&theme=0" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-8">
+                <iframe style="border-radius:8px" src="https://open.spotify.com/embed/track/4prEPl61C8qZpeo3IkYSMl?utm_source=generator&theme=0" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <!-- Chaos elements -->
             <div class="scribble scribble-1"></div>
             <div class="scribble scribble-2"></div>
             <div class="scribble scribble-3"></div>
             <div class="scribble scribble-4"></div>
+
             <div class="dot dot-1"></div>
             <div class="dot dot-2"></div>
             <div class="dot dot-3"></div>
             <div class="dot dot-4"></div>
+            <div class="dot dot-5"></div>
+            <div class="dot dot-6"></div>
+
             <div class="x-mark x-1">×</div>
             <div class="x-mark x-2">×</div>
 
