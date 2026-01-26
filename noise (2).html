@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Noise — Matthew Whitham">
+    <meta property="og:description" content="A chaotic collage of sound and visuals.">
+    <title>Noise — Matthew Whitham</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        html, body {
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+        }
+
+        .noise-container {
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .noise-title {
+            font-family: var(--font-display);
+            font-size: 25vw;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-primary);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-8deg);
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+        }
+
+        .collage-wall {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .collage-item {
+            position: absolute;
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .collage-item:hover {
+            z-index: 500 !important;
+            transform: scale(1.15) rotate(0deg) !important;
+        }
+
+        .collage-image {
+            display: block;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+        }
+
+        .tape {
+            position: absolute;
+            background: rgba(210, 200, 160, 0.35);
+            z-index: 5;
+        }
+
+        /* SUPER TIGHT - bigger images, overlapping heavily */
+        .item-1 { top: 3%; left: 1%; transform: rotate(-11deg); z-index: 10; }
+        .item-1 img { width: 180px; }
+        
+        .item-2 { top: 2%; left: 13%; transform: rotate(7deg); z-index: 15; }
+        .item-2 img { width: 150px; }
+        
+        .item-3 { top: 5%; left: 27%; transform: rotate(-4deg); z-index: 12; }
+        .item-3 img { width: 100px; border-radius: 50%; }
+        
+        .item-4 { top: 1%; left: 38%; transform: rotate(9deg); z-index: 18; }
+        .item-4 img { width: 170px; }
+        
+        .item-5 { top: 3%; left: 54%; transform: rotate(-7deg); z-index: 14; }
+        .item-5 img { width: 180px; }
+
+        .item-6 { top: 2%; left: 72%; transform: rotate(5deg); z-index: 11; }
+        .item-6 img { width: 160px; }
+
+        .item-7 { top: 4%; right: 1%; transform: rotate(-9deg); z-index: 16; }
+        .item-7 img { width: 170px; }
+
+        /* Row 2 - overlapping row 1 */
+        .item-8 { top: 22%; left: 0%; transform: rotate(13deg); z-index: 20; }
+        .item-8 img { width: 160px; }
+        
+        .item-9 { top: 24%; left: 15%; transform: rotate(-6deg); z-index: 13; }
+        .item-9 img { width: 145px; }
+        
+        .item-10 { top: 20%; left: 32%; transform: rotate(4deg); z-index: 17; }
+        .item-10 img { width: 155px; }
+
+        .item-11 { top: 26%; left: 50%; transform: rotate(-10deg); z-index: 19; }
+        .item-11 img { width: 165px; }
+        
+        .item-12 { top: 22%; left: 68%; transform: rotate(8deg); z-index: 12; }
+        .item-12 img { width: 175px; }
+
+        .item-13 { top: 24%; right: 1%; transform: rotate(-5deg); z-index: 21; }
+        .item-13 img { width: 150px; }
+
+        /* Row 3 */
+        .item-14 { top: 48%; left: 1%; transform: rotate(7deg); z-index: 14; }
+        .item-14 img { width: 170px; }
+        
+        .item-15 { top: 52%; left: 18%; transform: rotate(-12deg); z-index: 22; }
+        .item-15 img { width: 155px; }
+
+        .item-16 { top: 46%; left: 38%; transform: rotate(6deg); z-index: 16; }
+        .item-16 img { width: 180px; }
+        
+        .item-17 { top: 50%; left: 58%; transform: rotate(-8deg); z-index: 13; }
+        .item-17 img { width: 165px; }
+
+        .item-18 { top: 48%; right: 8%; transform: rotate(11deg); z-index: 18; }
+        .item-18 img { width: 150px; }
+
+        /* Row 4 - bottom */
+        .item-19 { top: 72%; left: 5%; transform: rotate(-7deg); z-index: 15; }
+        .item-19 img { width: 160px; }
+        
+        .item-20 { top: 75%; left: 25%; transform: rotate(9deg); z-index: 20; }
+        .item-20 img { width: 145px; }
+
+        /* Spotify - FULL SIZE, no cropping */
+        .spotify-item {
+            position: absolute;
+            z-index: 30;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            overflow: hidden;
+        }
+
+        .spotify-item iframe {
+            border: none;
+            display: block;
+        }
+
+        .spotify-1 { top: 8%; left: 48%; transform: rotate(-3deg); }
+        .spotify-2 { top: 15%; right: 5%; transform: rotate(4deg); }
+        .spotify-3 { top: 35%; left: 5%; transform: rotate(5deg); }
+        .spotify-4 { top: 38%; left: 42%; transform: rotate(-4deg); }
+        .spotify-5 { top: 32%; right: 3%; transform: rotate(3deg); }
+        .spotify-6 { top: 58%; left: 28%; transform: rotate(-5deg); }
+        .spotify-7 { top: 62%; left: 52%; transform: rotate(4deg); }
+        .spotify-8 { top: 70%; right: 5%; transform: rotate(-3deg); }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            html, body {
+                overflow: auto;
+                height: auto;
+            }
+            .noise-container {
+                position: relative;
+                height: auto;
+                padding: 70px 5px 20px;
+            }
+            .collage-wall {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .collage-item {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                margin: -8px;
+            }
+            .collage-item img {
+                width: 35vw !important;
+                max-width: 140px !important;
+            }
+            .spotify-item {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                margin: 10px auto;
+                transform: rotate(0deg) !important;
+            }
+            .spotify-item iframe {
+                width: 85vw !important;
+                max-width: 300px !important;
+            }
+            .noise-title { font-size: 20vw; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="grain-overlay"></div>
+
+    <nav class="main-nav">
+        <a href="index.html" class="nav-logo">MW</a>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="index.html" class="nav-link">Today</a>
+            <a href="archive.html" class="nav-link">Archive</a>
+            <a href="visuals.html" class="nav-link">Visuals</a>
+            <a href="noise.html" class="nav-link active">Noise</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="support.html" class="nav-link">Support</a>
+        </div>
+    </nav>
+
+    <div class="noise-title">NOISE</div>
+
+    <main class="noise-container">
+        <div class="collage-wall">
+            
+            <div class="collage-item item-1">
+                <div class="tape" style="width:50px;height:16px;top:-8px;left:30%;transform:rotate(3deg);"></div>
+                <img src="images/noise/noise1.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-2">
+                <div class="tape" style="width:45px;height:15px;top:-7px;right:15px;transform:rotate(-4deg);"></div>
+                <img src="images/noise/noise2.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-3">
+                <img src="images/noise/noise3.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-4">
+                <div class="tape" style="width:55px;height:16px;top:-8px;left:25%;transform:rotate(2deg);"></div>
+                <div class="tape" style="width:16px;height:50px;left:-8px;top:25%;transform:rotate(-3deg);"></div>
+                <img src="images/noise/noise4.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-5">
+                <div class="tape" style="width:48px;height:15px;top:-7px;left:35%;transform:rotate(-2deg);"></div>
+                <img src="images/noise/noise5.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-6">
+                <div class="tape" style="width:42px;height:14px;top:-7px;right:20px;transform:rotate(3deg);"></div>
+                <img src="images/noise/noise6.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-7">
+                <div class="tape" style="width:50px;height:16px;top:-8px;left:20%;transform:rotate(-3deg);"></div>
+                <img src="images/noise/noise7.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-8">
+                <div class="tape" style="width:16px;height:45px;right:-8px;top:30%;transform:rotate(2deg);"></div>
+                <img src="images/noise/noise8.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-9">
+                <div class="tape" style="width:48px;height:15px;top:-7px;left:30%;transform:rotate(4deg);"></div>
+                <img src="images/noise/noise9.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-10">
+                <div class="tape" style="width:52px;height:16px;top:-8px;left:40%;transform:rotate(-2deg);"></div>
+                <img src="images/noise/noise10.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-11">
+                <div class="tape" style="width:50px;height:15px;top:-7px;left:25%;transform:rotate(-3deg);"></div>
+                <img src="images/noise/noise11.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-12">
+                <div class="tape" style="width:16px;height:48px;left:-8px;top:20%;transform:rotate(3deg);"></div>
+                <img src="images/noise/noise12.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-13">
+                <div class="tape" style="width:45px;height:14px;top:-7px;right:25px;transform:rotate(2deg);"></div>
+                <img src="images/noise/noise13.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-14">
+                <div class="tape" style="width:52px;height:16px;top:-8px;left:28%;transform:rotate(-2deg);"></div>
+                <img src="images/noise/noise14.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-15">
+                <div class="tape" style="width:16px;height:42px;right:-8px;top:35%;transform:rotate(-3deg);"></div>
+                <img src="images/noise/noise15.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-16">
+                <div class="tape" style="width:55px;height:16px;top:-8px;left:20%;transform:rotate(3deg);"></div>
+                <img src="images/noise/noise16.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-17">
+                <div class="tape" style="width:48px;height:15px;top:-7px;left:35%;transform:rotate(-4deg);"></div>
+                <img src="images/noise/noise17.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-18">
+                <div class="tape" style="width:50px;height:16px;top:-8px;left:30%;transform:rotate(2deg);"></div>
+                <div class="tape" style="width:15px;height:45px;left:-7px;top:40%;transform:rotate(3deg);"></div>
+                <img src="images/noise/noise18.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-19">
+                <div class="tape" style="width:45px;height:14px;top:-7px;right:30px;transform:rotate(3deg);"></div>
+                <img src="images/noise/noise19.jpg" alt="" class="collage-image">
+            </div>
+
+            <div class="collage-item item-20">
+                <div class="tape" style="width:50px;height:15px;top:-7px;left:22%;transform:rotate(-2deg);"></div>
+                <img src="images/noise/noise20.jpg" alt="" class="collage-image">
+            </div>
+
+            <!-- Spotify - full 152px height, playable -->
+            <div class="spotify-item spotify-1">
+                <iframe src="https://open.spotify.com/embed/track/1j581GCDFQ9P8xd6fyjgLt?utm_source=generator&theme=0" width="250" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-2">
+                <iframe src="https://open.spotify.com/embed/track/53uhTsdGotEgrDAJydRSov?utm_source=generator&theme=0" width="250" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-3">
+                <iframe src="https://open.spotify.com/embed/track/5q0N5SaFhROG9UQiPukv9p?utm_source=generator&theme=0" width="250" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-4">
+                <iframe src="https://open.spotify.com/embed/track/7Ei2LsA34MJPITPv72dvZw?utm_source=generator&theme=0" width="250" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-5">
+                <iframe src="https://open.spotify.com/embed/track/6kqlHdAgxs12KJCrnVKfht?utm_source=generator&theme=0" width="250" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-6">
+                <iframe src="https://open.spotify.com/embed/track/3VHiIVQe8Sc6gtSsTp3pDz?utm_source=generator&theme=0" width="250" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-7">
+                <iframe src="https://open.spotify.com/embed/track/2FwDApgXk91kXvqy2oB7dz?utm_source=generator&theme=0" width="250" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="spotify-item spotify-8">
+                <iframe src="https://open.spotify.com/embed/track/4prEPl61C8qZpeo3IkYSMl?utm_source=generator&theme=0" width="250" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('nav-toggle').addEventListener('click', function() {
+            document.getElementById('nav-links').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('nav-links').classList.remove('active');
+                document.getElementById('nav-toggle').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
